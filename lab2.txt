@@ -1,0 +1,32 @@
+TDA usuario
+% Usuario = [Id, Nombre, Deuda, LibrosPrestados, Estado]
+% Estado = activo | suspendido
+constructor
+% crearUsuario(Id, Nombre, Usuario)
+crearUsuario(Id, Nombre, [Id, Nombre, 0, [], activo]).
+Selectores
+usuarioId([Id,_,_,_,_], Id).
+usuarioNombre([_,Nombre,_,_,_], Nombre).
+usuarioDeuda([_,_,Deuda,_,_], Deuda).
+usuarioLibros([_,_,_,Libros,_], Libros).
+usuarioEstado([_,_,_,_,Estado], Estado).
+Modificadores
+setUsuarioDeuda([Id,N,D,L,E], Nueva, [Id,N,Nueva,L,E]).
+setUsuarioLibros([Id,N,D,_,E], NuevaL, [Id,N,D,NuevaL,E]).
+setUsuarioEstado([Id,N,D,L,_], NuevoE, [Id,N,D,L,NuevoE]).
+
+TDA Libro
+% Libro = [Id, Titulo, Autor, Disponible]
+% Disponible = si | no
+Const
+crearLibro(Id, Titulo, Autor, [Id, TituloMin, AutorMin, si]) :-
+    string_lower(Titulo, TituloMin),
+    string_lower(Autor, AutorMin).
+
+select
+libroId([Id,_,_,_], Id).
+libroTitulo([_,Titulo,_,_], Titulo).
+libroAutor([_,_,Autor,_], Autor).
+libroDisponible([_,_,_,Disp], Disp).
+modificadores
+setLibroDisponible([Id,T,A,_], Nuevo, [Id,T,A,Nuevo]).
