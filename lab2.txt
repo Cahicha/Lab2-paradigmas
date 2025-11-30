@@ -30,3 +30,43 @@ libroAutor([_,_,Autor,_], Autor).
 libroDisponible([_,_,_,Disp], Disp).
 modificadores
 setLibroDisponible([Id,T,A,_], Nuevo, [Id,T,A,Nuevo]).
+
+TDA biblioteca
+% Biblioteca =
+% [ Libros,
+%   Usuarios,
+%   Prestamos,
+%   MaxLibrosUsuario,
+%   DiasMaxPrestamo,
+%   TasaMulta,
+%   LimiteDeuda,
+%   DiasMaxRetraso,
+%   FechaActual ]
+constru
+crearBiblioteca(Libros, Usuarios, Prestamos,
+                MaxLibros, DiasMax, Tasa,
+                Limite, DiasRet, Fecha,
+                [Libros, Usuarios, Prestamos,
+                 MaxLibros, DiasMax, Tasa,
+                 Limite, DiasRet, Fecha]).
+
+selectores
+bibLibros([L|_], L).
+bibUsuarios([_,U|_], U).
+bibPrestamos([_,_,P|_], P).
+bibMaxLibros([_,_,_,M|_], M).
+bibDiasMax([_,_,_,_,Dmax|_], Dmax).
+bibTasa([_,_,_,_,_,T|_], T).
+bibLimite([_,_,_,_,_,_,Lim|_], Lim).
+bibDiasRet([_,_,_,_,_,_,_,R|_], R).
+bibFecha([_,_,_,_,_,_,_,_,F], F).
+Modif
+setBibLibros([_,U,P,M,D,T,L,DR,F], NL,
+             [NL,U,P,M,D,T,L,DR,F]).
+
+setBibUsuarios([L,_,P,M,D,T,Lm,DR,F], NU,
+               [L,NU,P,M,D,T,Lm,DR,F]).
+
+setBibPrestamos([L,U,_,M,D,T,Lm,DR,F], NP,
+                [L,U,NP,M,D,T,Lm,DR,F]).
+
