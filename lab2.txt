@@ -70,3 +70,60 @@ setBibUsuarios([L,_,P,M,D,T,Lm,DR,F], NU,
 setBibPrestamos([L,U,_,M,D,T,Lm,DR,F], NP,
                 [L,U,NP,M,D,T,Lm,DR,F]).
 
+TDA prestamo
+const
+crearPrestamo(Id, IdUsuario, IdLibro, Fecha, Dias, [Id, IdUsuario, IdLibro, Fecha, Dias]) :-
+    diasMaxPrestamoGlobal(DMax),
+    Dias =< DMax.
+
+%funcion agregar libro%
+
+
+agregarLibro(BibliotecaIn, Libro1, BibliotecaOut) :-
+
+    bibLibros(BibliotecaIn, Libros),
+    libroId(Libro1, NuevoId),
+
+    (   existeLibroId(Libros, NuevoId)
+    ->  BibliotecaOut = BibliotecaIn
+    ;   append(Libros, [Libro1], Libros2),
+        setBibLibros(BibliotecaIn, Libros2, BibliotecaOut)
+    ).
+
+% Auxiliar
+existeLibroId([L|_], Id) :- libroId(L, Id), !.
+existeLibroId([_|R], Id) :- existeLibroId(R, Id).
+existeLibroId([], _) :- fail.
+
+%funcion registrar usuario%
+
+registrarUsuario(BibliotecaIn, Usuario, BibliotecaOut) :-
+
+    bibUsuarios(BibliotecaIn, Users),
+    usuarioId(Usuario, IdNuevo),
+
+    (   existeUsuarioId(Users, IdNuevo)
+    ->  BibliotecaOut = BibliotecaIn
+    ;   append(Users, [Usuario], Users2),
+        setBibUsuarios(BIn, Users2, BOut)
+    ).
+
+% Auxiliar
+existeUsuarioId([U|_], Id) :- usuarioId(U, Id), !.
+existeUsuarioId([_|R], Id) :- existeUsuarioId(R, Id).
+existeUsuarioId([], _) :- fail.
+iblioteca
+
+%obtener usuario%
+
+obtenerUsuario(BibliotecaIn, Id, U) :-
+    bibUsuarios(BibliotecaIn, Users),
+    buscarUsuarioLista(Users, Id, U).
+
+buscarUsuarioLista([Usuario|_], Id, Usuario) :-
+    usuarioId(Usuario, Id), !.
+
+buscarUsuarioLista([_|Resto], Id, Usuario) :-
+    buscarUsuarioLista(Resto, Id, Usuario).
+
+buscarUsuarioLista([], _, false).
