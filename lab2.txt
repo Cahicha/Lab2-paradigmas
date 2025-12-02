@@ -127,3 +127,70 @@ buscarUsuarioLista([_|Resto], Id, Usuario) :-
     buscarUsuarioLista(Resto, Id, Usuario).
 
 buscarUsuarioLista([], _, false).
+
+%buscar libro%
+
+buscarLibro(BibliotecaIn, "id", Valor, LibroOut) :-
+    bibLibros(BibliotecaIn, Libros),
+    buscarLibroPorId(Libros, Valor, LibroOut), !.
+
+buscarLibro(BibliotecaIn, "titulo", Valor, LibroOut) :-
+    bibLibros(BibliotecaIn, Libros),
+    string_lower(Valor, ValorMin),
+    buscarLibroPorTitulo(Libros, ValorMin, LibroOut), !.
+
+buscarLibro(BibliotecaIn, "autor", Valor, LibroOut) :-
+    bibLibros(BibliotecaIn, Libros),
+    string_lower(Valor, ValorMin),
+    buscarLibroPorAutor(Libros, ValorMin, LibroOut), !.
+
+buscarLibro(_, _, _, false).
+
+% auxiliares %
+
+buscarLibroPorId([Libro|_], Id, Libro) :-
+    libroId(Libro, Id), !.
+buscarLibroPorId([_|Resto], Id, Libro) :-
+    buscarLibroPorId(Resto, Id, Libro).
+buscarLibroPorId([], _, false).
+
+buscarLibroPorTitulo([Libro|_], ValorMin, Libro) :-
+    libroTitulo(Libro, Titulo),
+    sub_atom(Titulo, _, _, _, ValorMin), !.
+
+buscarLibroPorTitulo([_|Resto], ValorMin, Libro) :-
+    buscarLibroPorTitulo(Resto, ValorMin, Libro).
+buscarLibroPorTitulo([], _, false).
+
+buscarLibroPorAutor([Libro|_], ValorMin, Libro) :-
+    libroAutor(Libro, Autor),
+    sub_atom(Autor, _, _, _, ValorMin), !.
+
+buscarLibroPorAutor([_|Resto], ValorMin, Libro) :-
+    buscarLibroPorAutor(Resto, ValorMin, Libro).
+buscarLibroPorAutor([], _, false).
+
+%obtener id libro%
+getLibroId(Libro, Id) :-
+    libroId(Libro, Id).
+
+%obtener fecha actual%
+getFecha(Biblioteca, Fecha) :-
+    bibFecha(Biblioteca, Fecha).
+
+%verifinar disponibilidad de libro%
+isLibroDisponible(BibliotecaIn, IdLibro) :-
+    bibLibros(BibliotecaIn, Libros),
+    buscarLibroPorId(Libros, IdLibro, LibroOut),
+    LibroOut \= false,
+    libroDisponible(LibroOut, si).
+
+%verificar si el usuario esta suspendido%
+
+isUsuarioSuspendido(Usuario) :-
+    usuarioEstado(Usuario, suspendido).
+
+%obtener deuda%
+
+obtenerDeuda(Usuario, Deuda) :-
+    usuarioDeuda(Usuario, Deuda).
