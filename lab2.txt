@@ -23,7 +23,7 @@ crearLibro(Id, Titulo, Autor, [Id, TituloMin, AutorMin, si]) :-
     string_lower(Titulo, TituloMin),
     string_lower(Autor, AutorMin).
 
-select
+selectores
 libroId([Id,_,_,_], Id).
 libroTitulo([_,Titulo,_,_], Titulo).
 libroAutor([_,_,Autor,_], Autor).
@@ -42,7 +42,7 @@ TDA biblioteca
 %   LimiteDeuda,
 %   DiasMaxRetraso,
 %   FechaActual ]
-constru
+constructor
 crearBiblioteca(Libros, Usuarios, Prestamos,
                 MaxLibros, DiasMax, Tasa,
                 Limite, DiasRet, Fecha,
@@ -60,7 +60,7 @@ bibTasa([_,_,_,_,_,T|_], T).
 bibLimite([_,_,_,_,_,_,Lim|_], Lim).
 bibDiasRet([_,_,_,_,_,_,_,R|_], R).
 bibFecha([_,_,_,_,_,_,_,_,F], F).
-Modif
+Modificadores
 setBibLibros([_,U,P,M,D,T,L,DR,F], NL,
              [NL,U,P,M,D,T,L,DR,F]).
 
@@ -71,10 +71,12 @@ setBibPrestamos([L,U,_,M,D,T,Lm,DR,F], NP,
                 [L,U,NP,M,D,T,Lm,DR,F]).
 
 TDA prestamo
-const
+constructor
+
 crearPrestamo(Id, IdUsuario, IdLibro, Fecha, Dias, [Id, IdUsuario, IdLibro, Fecha, Dias]) :-
     diasMaxPrestamoGlobal(DMax),
     Dias =< DMax.
+
 
 %funcion agregar libro%
 
@@ -108,11 +110,10 @@ registrarUsuario(BibliotecaIn, Usuario, BibliotecaOut) :-
         setBibUsuarios(BIn, Users2, BOut)
     ).
 
-% Auxiliar
+% Auxiliar %
 existeUsuarioId([U|_], Id) :- usuarioId(U, Id), !.
 existeUsuarioId([_|R], Id) :- existeUsuarioId(R, Id).
 existeUsuarioId([], _) :- fail.
-iblioteca
 
 %obtener usuario%
 
