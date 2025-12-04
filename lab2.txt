@@ -1,3 +1,4 @@
+estoy con licencia :(
 TDA usuario
 % Usuario = [Id, Nombre, Deuda, LibrosPrestados, Estado]
 % Estado = activo | suspendido
@@ -77,7 +78,54 @@ crearPrestamo(Id, IdUsuario, IdLibro, Fecha, Dias, [Id, IdUsuario, IdLibro, Fech
     diasMaxPrestamoGlobal(DMax),
     Dias =< DMax.
 
+TDA fecha
 
+%pertenencia
+fecha_valida(fecha(D, M)) :-
+    integer(D), integer(M),
+    D >= 1, D =< 30,
+    M >= 1, M =< 12.
+
+%constructores%
+crear_fecha(D, M, fecha(D, M)) :-
+    fecha_valida(fecha(D, M)), !.
+crear_fecha(D, M, _) :-
+    format([D, M]),
+    fail.
+
+%selectores%
+dia(fecha(D, _), D).
+mes(fecha(_, M), M).
+
+%funciones utiles%
+%avanzar dia%
+avanzar_dia(fecha(D, M), fecha(D2, M2)) :-
+    ( D < 30 ->
+        D2 is D + 1,
+        M2 is M
+    ;
+        D2 is 1,
+        M2 is M + 1
+    ),
+    fecha_valida(fecha(D2, M2)).
+
+%avanzar n dias%
+avanzar_varios_dias(Fecha, 0, Fecha) :- !.
+avanzar_varios_dias(Fecha, N, R) :-
+    N > 0,
+    avanzar_dia(Fecha, F2),
+    N1 is N - 1,
+    avanzar_varios_dias(F2, N1, R).
+
+% dias edesde inicio%
+dias_desde_inicio(fecha(D, M), R) :-
+    R is (M - 1) * 30 + D.
+
+%diferencia entre fechas%
+dias_entre(F1, F2, Diff) :-
+    dias_desde_inicio(F1, A),
+    dias_desde_inicio(F2, B),
+    Diff is B - A.
 %funcion agregar libro%
 
 
