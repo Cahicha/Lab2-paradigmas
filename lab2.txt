@@ -243,3 +243,11 @@ isUsuarioSuspendido(Usuario) :-
 
 obtenerDeuda(Usuario, Deuda) :-
     usuarioDeuda(Usuario, Deuda).
+
+%transformar fecha%
+
+transformar_fecha(Str, Fecha) :-
+    split_string(Str, "/", "", [Ds, Ms]),
+    number_string(D, Ds),
+    number_string(M, Ms),
+    crear_fecha(D, M, Fecha).
