@@ -1,38 +1,42 @@
 estoy con licencia :(
-TDA usuario
+%%TDA usuario%%
 % Usuario = [Id, Nombre, Deuda, LibrosPrestados, Estado]
 % Estado = activo | suspendido
-constructor
+%constructor%
+
 % crearUsuario(Id, Nombre, Usuario)
 crearUsuario(Id, Nombre, [Id, Nombre, 0, [], activo]).
-Selectores
+
+%Selectores%
+
 usuarioId([Id,_,_,_,_], Id).
 usuarioNombre([_,Nombre,_,_,_], Nombre).
 usuarioDeuda([_,_,Deuda,_,_], Deuda).
 usuarioLibros([_,_,_,Libros,_], Libros).
 usuarioEstado([_,_,_,_,Estado], Estado).
-Modificadores
+
+%Modificadores%
 setUsuarioDeuda([Id,N,D,L,E], Nueva, [Id,N,Nueva,L,E]).
 setUsuarioLibros([Id,N,D,_,E], NuevaL, [Id,N,D,NuevaL,E]).
 setUsuarioEstado([Id,N,D,L,_], NuevoE, [Id,N,D,L,NuevoE]).
 
-TDA Libro
+%%TDA Libro%%
 % Libro = [Id, Titulo, Autor, Disponible]
 % Disponible = si | no
-Const
+%Constructor%
 crearLibro(Id, Titulo, Autor, [Id, TituloMin, AutorMin, si]) :-
     string_lower(Titulo, TituloMin),
     string_lower(Autor, AutorMin).
 
-selectores
+%selectores%
 libroId([Id,_,_,_], Id).
 libroTitulo([_,Titulo,_,_], Titulo).
 libroAutor([_,_,Autor,_], Autor).
 libroDisponible([_,_,_,Disp], Disp).
-modificadores
+%modificadores%
 setLibroDisponible([Id,T,A,_], Nuevo, [Id,T,A,Nuevo]).
 
-TDA biblioteca
+%%TDA biblioteca%%
 % Biblioteca =
 % [ Libros,
 %   Usuarios,
@@ -43,7 +47,8 @@ TDA biblioteca
 %   LimiteDeuda,
 %   DiasMaxRetraso,
 %   FechaActual ]
-constructor
+
+%constructor%
 crearBiblioteca(Libros, Usuarios, Prestamos,
                 MaxLibros, DiasMax, Tasa,
                 Limite, DiasRet, Fecha,
@@ -51,7 +56,7 @@ crearBiblioteca(Libros, Usuarios, Prestamos,
                  MaxLibros, DiasMax, Tasa,
                  Limite, DiasRet, Fecha]).
 
-selectores
+%selectores%
 bibLibros([L|_], L).
 bibUsuarios([_,U|_], U).
 bibPrestamos([_,_,P|_], P).
@@ -61,7 +66,8 @@ bibTasa([_,_,_,_,_,T|_], T).
 bibLimite([_,_,_,_,_,_,Lim|_], Lim).
 bibDiasRet([_,_,_,_,_,_,_,R|_], R).
 bibFecha([_,_,_,_,_,_,_,_,F], F).
-Modificadores
+
+%Modificadores%
 setBibLibros([_,U,P,M,D,T,L,DR,F], NL,
              [NL,U,P,M,D,T,L,DR,F]).
 
@@ -71,16 +77,42 @@ setBibUsuarios([L,_,P,M,D,T,Lm,DR,F], NU,
 setBibPrestamos([L,U,_,M,D,T,Lm,DR,F], NP,
                 [L,U,NP,M,D,T,Lm,DR,F]).
 
-TDA prestamo
-constructor
+setBibMaxLibros([L,U,P,_,D,T,Lm,DR,F], NM,
+		[L,U,P,NM,D,T,Lm,DR,F]).
+
+setBibDiasMax([L,U,P,M,_,T,Lm,DR,F], ND,
+		[L,U,P,M,ND,T,Lm,DR,F]).
+
+setBibTasa([L,U,P,M,D,_,Lm,DR,F], NT,
+		[L,U,P,M,D,NT,Lm,DR,F]).
+
+setBibLimite([L,U,P,M,D,T,_,DR,F], NL,
+		[L,U,P,M,D,T,NL,DR,F]).
+
+setBibDiasRet([L,U,P,M,D,T,Lm,_,F], NR,
+		[L,U,P,M,D,T,Lm,NR,F]).
+
+setBibFecha([L,U,P,M,D,T,Lm,DR,_], NF,
+		[L,U,P,M,D,T,Lm,DR,NF]).
+
+
+%%TDA prestamo%%
+%constructor%
 
 crearPrestamo(Id, IdUsuario, IdLibro, Fecha, Dias, [Id, IdUsuario, IdLibro, Fecha, Dias]) :-
     diasMaxPrestamoGlobal(DMax),
     Dias =< DMax.
+%selectores%
+prestamoId([Id,_,_,_,_], Id).
+prestamoUsuario([_,U,_,_,_], U).
+prestamoLibro([_,_,L,_,_], L).
+prestamoFecha([_,_,_,F,_], F).
+prestamoDias([_,_,_,_,D], D).
 
-TDA fecha
+%%TDA fecha%%
 
-%pertenencia
+%pertenencia%
+
 fecha_valida(fecha(D, M)) :-
     integer(D), integer(M),
     D >= 1, D =< 30,
@@ -90,14 +122,14 @@ fecha_valida(fecha(D, M)) :-
 crear_fecha(D, M, fecha(D, M)) :-
     fecha_valida(fecha(D, M)), !.
 crear_fecha(D, M, _) :-
-    format([D, M]),
+    format('Fecha inválida: día ~d, mes ~d~n', [D, M]),
     fail.
 
 %selectores%
+
 dia(fecha(D, _), D).
 mes(fecha(_, M), M).
 
-%funciones utiles%
 %avanzar dia%
 avanzar_dia(fecha(D, M), fecha(D2, M2)) :-
     ( D < 30 ->
@@ -110,6 +142,7 @@ avanzar_dia(fecha(D, M), fecha(D2, M2)) :-
     fecha_valida(fecha(D2, M2)).
 
 %avanzar n dias%
+
 avanzar_varios_dias(Fecha, 0, Fecha) :- !.
 avanzar_varios_dias(Fecha, N, R) :-
     N > 0,
@@ -118,10 +151,12 @@ avanzar_varios_dias(Fecha, N, R) :-
     avanzar_varios_dias(F2, N1, R).
 
 % dias edesde inicio%
+
 dias_desde_inicio(fecha(D, M), R) :-
     R is (M - 1) * 30 + D.
 
 %diferencia entre fechas%
+
 dias_entre(F1, F2, Diff) :-
     dias_desde_inicio(F1, A),
     dias_desde_inicio(F2, B),
@@ -140,7 +175,7 @@ agregarLibro(BibliotecaIn, Libro1, BibliotecaOut) :-
         setBibLibros(BibliotecaIn, Libros2, BibliotecaOut)
     ).
 
-% Auxiliar
+%auxiliar%
 existeLibroId([L|_], Id) :- libroId(L, Id), !.
 existeLibroId([_|R], Id) :- existeLibroId(R, Id).
 existeLibroId([], _) :- fail.
@@ -155,10 +190,10 @@ registrarUsuario(BibliotecaIn, Usuario, BibliotecaOut) :-
     (   existeUsuarioId(Users, IdNuevo)
     ->  BibliotecaOut = BibliotecaIn
     ;   append(Users, [Usuario], Users2),
-        setBibUsuarios(BIn, Users2, BOut)
+        setBibUsuarios(BibliotecaIn, Users2, BibliotecaOut)
     ).
 
-% Auxiliar %
+%auxiliar %
 existeUsuarioId([U|_], Id) :- usuarioId(U, Id), !.
 existeUsuarioId([_|R], Id) :- existeUsuarioId(R, Id).
 existeUsuarioId([], _) :- fail.
@@ -251,3 +286,9 @@ transformar_fecha(Str, Fecha) :-
     number_string(D, Ds),
     number_string(M, Ms),
     crear_fecha(D, M, Fecha).
+
+%obtenerFechaVencimiento%
+
+
+obtenerFechaVencimiento([_,_,_,FechaPrestamo, DiasSolicitados], FechaVencimiento) :-
+    avanzar_varios_dias(FechaPrestamo, DiasSolicitados, FechaVencimiento).
