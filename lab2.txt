@@ -99,9 +99,10 @@ setBibFecha([L,U,P,M,D,T,Lm,DR,_], NF,
 %%TDA prestamo%%
 %constructor%
 
-crearPrestamo(Id, IdUsuario, IdLibro, Fecha, Dias, [Id, IdUsuario, IdLibro, Fecha, Dias]) :-
-    diasMaxPrestamoGlobal(DMax),
-    Dias =< DMax.
+crearPrestamo(Biblioteca, Id, IdUsuario, IdLibro, Fecha, Dias, Prestamo) :-
+    bibDiasMax(Biblioteca, DMax),
+    Dias =< DMax,
+    Prestamo = [Id, IdUsuario, IdLibro, Fecha, Dias].
 %selectores%
 prestamoId([Id,_,_,_,_], Id).
 prestamoUsuario([_,U,_,_,_], U).
@@ -287,8 +288,29 @@ transformar_fecha(Str, Fecha) :-
     number_string(M, Ms),
     crear_fecha(D, M, Fecha).
 
-%obtenerFechaVencimiento%
-
-
+%obtener fecha de vencimiento%
 obtenerFechaVencimiento([_,_,_,FechaPrestamo, DiasSolicitados], FechaVencimiento) :-
     avanzar_varios_dias(FechaPrestamo, DiasSolicitados, FechaVencimiento).
+
+%calcular dias de retraso%
+
+
+calcularDiasRetraso(FechaVen, FechaActual, DR) :-
+    transformar_fecha(FechaVenc, FechaVencTrans),
+    transformar_fecha(FechaActual, FechaActualTrans),
+    dias_entre(FechaVencTrans, FechaActualTrans, Diff),
+    ( Diff > 0 -> DR = Diff ; DR = 0 ).
+
+%calcular multa%
+
+
+calcularMulta(PrestamoIn, FechaActual, Tasa, Multa) :-
+    obtenerFechaVencimiento(PrestamoIn, FechaVenc),       
+    transformar_fecha(FechaActual, FechaActualTrans),      
+    dias_entre(FechaVenc, FechaActualTrans, Diff),
+    ( Diff > 0 ->
+        Multa is Diff * Tasa
+    ;
+        Multa is 0
+    ).
+
