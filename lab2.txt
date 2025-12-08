@@ -1,137 +1,109 @@
-estoy con licencia :(
-%%TDA usuario%%
+% TDA usuario
 % Usuario = [Id, Nombre, Deuda, LibrosPrestados, Estado]
 % Estado = activo | suspendido
-%constructor%
 
-% crearUsuario(Id, Nombre, Usuario)
+% RF02 crear usuario
+% constructor
 crearUsuario(Id, Nombre, [Id, Nombre, 0, [], activo]).
 
-%Selectores%
-
+% selectores
 usuarioId([Id,_,_,_,_], Id).
 usuarioNombre([_,Nombre,_,_,_], Nombre).
 usuarioDeuda([_,_,Deuda,_,_], Deuda).
 usuarioLibros([_,_,_,Libros,_], Libros).
 usuarioEstado([_,_,_,_,Estado], Estado).
+isUsuarioActivo([_, _, _, _, activo]).
 
-%Modificadores%
-setUsuarioDeuda([Id,N,D,L,E], Nueva, [Id,N,Nueva,L,E]).
+% modificadores
+setUsuarioDeuda([Id,N,_,L,E], Nueva, [Id,N,Nueva,L,E]).
 setUsuarioLibros([Id,N,D,_,E], NuevaL, [Id,N,D,NuevaL,E]).
 setUsuarioEstado([Id,N,D,L,_], NuevoE, [Id,N,D,L,NuevoE]).
 
-%%TDA Libro%%
-% Libro = [Id, Titulo, Autor, Disponible]
-% Disponible = si | no
-%Constructor%
+% TDA libro
+% Libro = [Id, TituloMin, AutorMin, Disponible]  Disponible = si | no
+
+% RF03 crear libro 
+% constructor
 crearLibro(Id, Titulo, Autor, [Id, TituloMin, AutorMin, si]) :-
     string_lower(Titulo, TituloMin),
     string_lower(Autor, AutorMin).
 
-%selectores%
+% selectores
 libroId([Id,_,_,_], Id).
 libroTitulo([_,Titulo,_,_], Titulo).
 libroAutor([_,_,Autor,_], Autor).
 libroDisponible([_,_,_,Disp], Disp).
-%modificadores%
+
+% modificadores
 setLibroDisponible([Id,T,A,_], Nuevo, [Id,T,A,Nuevo]).
 
-%%TDA biblioteca%%
-% Biblioteca =
-% [ Libros,
-%   Usuarios,
-%   Prestamos,
-%   MaxLibrosUsuario,
-%   DiasMaxPrestamo,
-%   TasaMulta,
-%   LimiteDeuda,
-%   DiasMaxRetraso,
-%   FechaActual ]
+% TDA biblioteca
+% [ Libros, Usuarios, Prestamos, MaxLibrosUsuario, DiasMaxPrestamo,
+%   TasaMulta, LimiteDeuda, DiasMaxRetraso, FechaActual ]
 
-%constructor%
+% RF05 crear biblioteca
+% constructor
 crearBiblioteca(Libros, Usuarios, Prestamos,
-                MaxLibros, DiasMax, Tasa,
-                Limite, DiasRet, Fecha,
+                MaxLibros, DiasMax, TasaMulta,
+                LimiteDeuda, DiasRetraso, Fecha,
                 [Libros, Usuarios, Prestamos,
-                 MaxLibros, DiasMax, Tasa,
-                 Limite, DiasRet, Fecha]).
+                 MaxLibros, DiasMax, TasaMulta,
+                 LimiteDeuda, DiasRetraso, Fecha]).
 
-%selectores%
-bibLibros([L|_], L).
-bibUsuarios([_,U|_], U).
-bibPrestamos([_,_,P|_], P).
-bibMaxLibros([_,_,_,M|_], M).
-bibDiasMax([_,_,_,_,Dmax|_], Dmax).
-bibTasa([_,_,_,_,_,T|_], T).
-bibLimite([_,_,_,_,_,_,Lim|_], Lim).
-bibDiasRet([_,_,_,_,_,_,_,R|_], R).
-bibFecha([_,_,_,_,_,_,_,_,F], F).
+% selectores
+bibLibros([Libros,_,_,_,_,_,_,_,_], Libros).
+bibUsuarios([_,Usuarios,_,_,_,_,_,_,_], Usuarios).
+bibPrestamos([_,_,Prestamos,_,_,_,_,_,_], Prestamos).
+bibMaxLibros([_,_,_,MaxLibros,_,_,_,_,_], MaxLibros).
+bibDiasMax([_,_,_,_,DiasMax,_,_,_,_], DiasMax).
+bibTasaMulta([_,_,_,_,_,TasaMulta,_,_,_], TasaMulta).
+bibLimiteDeuda([_,_,_,_,_,_,LimiteDeuda,_,_], LimiteDeuda).
+bibDiasRetraso([_,_,_,_,_,_,_,DiasRetraso,_], DiasRetraso).
+bibFecha([_,_,_,_,_,_,_,_,Fecha], Fecha).
 
-%Modificadores%
-setBibLibros([_,U,P,M,D,T,L,DR,F], NL,
-             [NL,U,P,M,D,T,L,DR,F]).
+% modificadores
+setBibLibros([_,U,P,M,D,T,L,DR,F], NL, [NL,U,P,M,D,T,L,DR,F]).
+setBibUsuarios([L,_,P,M,D,T,Lm,DR,F], NU, [L,NU,P,M,D,T,Lm,DR,F]).
+setBibPrestamos([L,U,_,M,D,T,Lm,DR,F], NP, [L,U,NP,M,D,T,Lm,DR,F]).
+setBibMaxLibros([L,U,P,_,D,T,Lm,DR,F], NM, [L,U,P,NM,D,T,Lm,DR,F]).
+setBibDiasMax([L,U,P,M,_,T,Lm,DR,F], ND, [L,U,P,M,ND,T,Lm,DR,F]).
+setBibTasaMulta([L,U,P,M,D,_,Lm,DR,F], NT, [L,U,P,M,D,NT,Lm,DR,F]).
+setBibLimiteDeuda([L,U,P,M,D,T,_,DR,F], NL, [L,U,P,M,D,T,NL,DR,F]).
+setBibDiasRetraso([L,U,P,M,D,T,Lm,_,F], NR, [L,U,P,M,D,T,Lm,NR,F]).
+setBibFecha([L,U,P,M,D,T,Lm,DR,_], NF, [L,U,P,M,D,T,Lm,DR,NF]).
 
-setBibUsuarios([L,_,P,M,D,T,Lm,DR,F], NU,
-               [L,NU,P,M,D,T,Lm,DR,F]).
+% TDA prestamo
+% RF04 crear prestamo
+% constructor
+crearPrestamo(Id, IdUsuario, IdLibro, FechaPrestamo, DiasSolicitados,
+              [Id, IdUsuario, IdLibro, FechaPrestamo, DiasSolicitados]).
 
-setBibPrestamos([L,U,_,M,D,T,Lm,DR,F], NP,
-                [L,U,NP,M,D,T,Lm,DR,F]).
-
-setBibMaxLibros([L,U,P,_,D,T,Lm,DR,F], NM,
-		[L,U,P,NM,D,T,Lm,DR,F]).
-
-setBibDiasMax([L,U,P,M,_,T,Lm,DR,F], ND,
-		[L,U,P,M,ND,T,Lm,DR,F]).
-
-setBibTasa([L,U,P,M,D,_,Lm,DR,F], NT,
-		[L,U,P,M,D,NT,Lm,DR,F]).
-
-setBibLimite([L,U,P,M,D,T,_,DR,F], NL,
-		[L,U,P,M,D,T,NL,DR,F]).
-
-setBibDiasRet([L,U,P,M,D,T,Lm,_,F], NR,
-		[L,U,P,M,D,T,Lm,NR,F]).
-
-setBibFecha([L,U,P,M,D,T,Lm,DR,_], NF,
-		[L,U,P,M,D,T,Lm,DR,NF]).
-
-
-%%TDA prestamo%%
-%constructor%
-
-crearPrestamo(Biblioteca, Id, IdUsuario, IdLibro, Fecha, Dias, Prestamo) :-
-    bibDiasMax(Biblioteca, DMax),
-    Dias =< DMax,
-    Prestamo = [Id, IdUsuario, IdLibro, Fecha, Dias].
-%selectores%
+% selectores
 prestamoId([Id,_,_,_,_], Id).
 prestamoUsuario([_,U,_,_,_], U).
 prestamoLibro([_,_,L,_,_], L).
 prestamoFecha([_,_,_,F,_], F).
 prestamoDias([_,_,_,_,D], D).
 
-%%TDA fecha%%
+% TDA fecha
 
-%pertenencia%
-
+% pertenencia
 fecha_valida(fecha(D, M)) :-
     integer(D), integer(M),
     D >= 1, D =< 30,
     M >= 1, M =< 12.
 
-%constructores%
-crear_fecha(D, M, fecha(D, M)) :-
-    fecha_valida(fecha(D, M)), !.
+% constructores
+crear_fecha(D, M, fecha(D, M)) :- fecha_valida(fecha(D, M)), !.
 crear_fecha(D, M, _) :-
-    format('Fecha inválida: día ~d, mes ~d~n', [D, M]),
+    format('Formato de Fecha no valido: día ~d, mes ~d~n', [D, M]),
     fail.
 
-%selectores%
-
+% selectores
 dia(fecha(D, _), D).
 mes(fecha(_, M), M).
 
-%avanzar dia%
+% avanzar dia
 avanzar_dia(fecha(D, M), fecha(D2, M2)) :-
     ( D < 30 ->
         D2 is D + 1,
@@ -142,8 +114,7 @@ avanzar_dia(fecha(D, M), fecha(D2, M2)) :-
     ),
     fecha_valida(fecha(D2, M2)).
 
-%avanzar n dias%
-
+% avanzar n dias
 avanzar_varios_dias(Fecha, 0, Fecha) :- !.
 avanzar_varios_dias(Fecha, N, R) :-
     N > 0,
@@ -151,98 +122,96 @@ avanzar_varios_dias(Fecha, N, R) :-
     N1 is N - 1,
     avanzar_varios_dias(F2, N1, R).
 
-% dias edesde inicio%
-
+% dias desde inicio
 dias_desde_inicio(fecha(D, M), R) :-
     R is (M - 1) * 30 + D.
 
-%diferencia entre fechas%
-
+% diferencia entre fechas
 dias_entre(F1, F2, Diff) :-
     dias_desde_inicio(F1, A),
     dias_desde_inicio(F2, B),
     Diff is B - A.
-%funcion agregar libro%
 
+% transformar_fecha: acepta tanto string "DD/MM" como fecha(D,M)
+transformar_fecha(Entrada, Fecha) :-
+    (   nonvar(Entrada), % para garantizar que tenga algun valor
+        Entrada = fecha(_,_)
+    ->  Fecha = Entrada
+    ;   string(Entrada)
+    ->  split_string(Entrada, "/", "", [Ds, Ms]),
+        number_string(D, Ds),
+        number_string(M, Ms),
+        crear_fecha(D, M, Fecha)
+    ;   % si es átomo con formato 'DD/MM'
+        atom(Entrada)
+    ->  atom_string(Entrada, S),
+        split_string(S, "/", "", [Ds2, Ms2]),
+        number_string(D2, Ds2),
+        number_string(M2, Ms2),
+        crear_fecha(D2, M2, Fecha)
+    ).
 
+% RF06 agregar libro
 agregarLibro(BibliotecaIn, Libro1, BibliotecaOut) :-
-
     bibLibros(BibliotecaIn, Libros),
     libroId(Libro1, NuevoId),
-
     (   existeLibroId(Libros, NuevoId)
     ->  BibliotecaOut = BibliotecaIn
     ;   append(Libros, [Libro1], Libros2),
         setBibLibros(BibliotecaIn, Libros2, BibliotecaOut)
     ).
 
-%auxiliar%
+% auxiliares
 existeLibroId([L|_], Id) :- libroId(L, Id), !.
 existeLibroId([_|R], Id) :- existeLibroId(R, Id).
 existeLibroId([], _) :- fail.
 
-%funcion registrar usuario%
-
+% RF07 registrar usuario
 registrarUsuario(BibliotecaIn, Usuario, BibliotecaOut) :-
-
     bibUsuarios(BibliotecaIn, Users),
     usuarioId(Usuario, IdNuevo),
-
     (   existeUsuarioId(Users, IdNuevo)
     ->  BibliotecaOut = BibliotecaIn
     ;   append(Users, [Usuario], Users2),
         setBibUsuarios(BibliotecaIn, Users2, BibliotecaOut)
     ).
 
-%auxiliar %
+% auxiliares
 existeUsuarioId([U|_], Id) :- usuarioId(U, Id), !.
 existeUsuarioId([_|R], Id) :- existeUsuarioId(R, Id).
 existeUsuarioId([], _) :- fail.
 
-%obtener usuario%
-
+% RF08 obtener usuario
 obtenerUsuario(BibliotecaIn, Id, U) :-
     bibUsuarios(BibliotecaIn, Users),
-    buscarUsuarioLista(Users, Id, U).
+    obtenerUsuarioLista(Users, Id, U).
 
-buscarUsuarioLista([Usuario|_], Id, Usuario) :-
-    usuarioId(Usuario, Id), !.
+obtenerUsuarioLista([Usuario|_], Id, Usuario) :- usuarioId(Usuario, Id), !.
+obtenerUsuarioLista([_|Resto], Id, Usuario) :- obtenerUsuarioLista(Resto, Id, Usuario).
+obtenerUsuarioLista([], _, false).
 
-buscarUsuarioLista([_|Resto], Id, Usuario) :-
-    buscarUsuarioLista(Resto, Id, Usuario).
-
-buscarUsuarioLista([], _, false).
-
-%buscar libro%
-
+% RF09 buscar libro por criterio
 buscarLibro(BibliotecaIn, "id", Valor, LibroOut) :-
     bibLibros(BibliotecaIn, Libros),
     buscarLibroPorId(Libros, Valor, LibroOut), !.
-
 buscarLibro(BibliotecaIn, "titulo", Valor, LibroOut) :-
     bibLibros(BibliotecaIn, Libros),
     string_lower(Valor, ValorMin),
     buscarLibroPorTitulo(Libros, ValorMin, LibroOut), !.
-
 buscarLibro(BibliotecaIn, "autor", Valor, LibroOut) :-
     bibLibros(BibliotecaIn, Libros),
     string_lower(Valor, ValorMin),
     buscarLibroPorAutor(Libros, ValorMin, LibroOut), !.
-
 buscarLibro(_, _, _, false).
 
-% auxiliares %
-
-buscarLibroPorId([Libro|_], Id, Libro) :-
-    libroId(Libro, Id), !.
-buscarLibroPorId([_|Resto], Id, Libro) :-
-    buscarLibroPorId(Resto, Id, Libro).
+% auxiliares de busqueda de libros
+buscarLibroPorId([Libro|_], Id, Libro) :- libroId(Libro, Id), !.
+buscarLibroPorId([_|Resto], Id, Libro) :- buscarLibroPorId(Resto, Id, Libro).
 buscarLibroPorId([], _, false).
 
 buscarLibroPorTitulo([Libro|_], ValorMin, Libro) :-
     libroTitulo(Libro, Titulo),
     sub_atom(Titulo, _, _, _, ValorMin), !.
-
 buscarLibroPorTitulo([_|Resto], ValorMin, Libro) :-
     buscarLibroPorTitulo(Resto, ValorMin, Libro).
 buscarLibroPorTitulo([], _, false).
@@ -250,67 +219,210 @@ buscarLibroPorTitulo([], _, false).
 buscarLibroPorAutor([Libro|_], ValorMin, Libro) :-
     libroAutor(Libro, Autor),
     sub_atom(Autor, _, _, _, ValorMin), !.
-
 buscarLibroPorAutor([_|Resto], ValorMin, Libro) :-
     buscarLibroPorAutor(Resto, ValorMin, Libro).
 buscarLibroPorAutor([], _, false).
 
-%obtener id libro%
-getLibroId(Libro, Id) :-
-    libroId(Libro, Id).
+% RF10 obtener id libro
+getLibroId(Libro, Id) :- libroId(Libro, Id).
 
-%obtener fecha actual%
-getFecha(Biblioteca, Fecha) :-
-    bibFecha(Biblioteca, Fecha).
+% RF11 obtener fecha actual
+getFecha(Biblioteca, Fecha) :- bibFecha(Biblioteca, Fecha).
 
-%verifinar disponibilidad de libro%
+% RF12 verificar disponibilidad de libro
 isLibroDisponible(BibliotecaIn, IdLibro) :-
     bibLibros(BibliotecaIn, Libros),
     buscarLibroPorId(Libros, IdLibro, LibroOut),
     LibroOut \= false,
     libroDisponible(LibroOut, si).
 
-%verificar si el usuario esta suspendido%
+% RF13 verificar si el usuario esta suspendido
+isUsuarioSuspendido(Usuario) :- usuarioEstado(Usuario, suspendido).
 
-isUsuarioSuspendido(Usuario) :-
-    usuarioEstado(Usuario, suspendido).
+% RF14 obtener deuda
+obtenerDeuda(Usuario, Deuda) :- usuarioDeuda(Usuario, Deuda).
 
-%obtener deuda%
-
-obtenerDeuda(Usuario, Deuda) :-
-    usuarioDeuda(Usuario, Deuda).
-
-%transformar fecha%
-
-transformar_fecha(Str, Fecha) :-
-    split_string(Str, "/", "", [Ds, Ms]),
-    number_string(D, Ds),
-    number_string(M, Ms),
-    crear_fecha(D, M, Fecha).
-
-%obtener fecha de vencimiento%
+% RF15 obtener fecha de vencimiento
 obtenerFechaVencimiento([_,_,_,FechaPrestamo, DiasSolicitados], FechaVencimiento) :-
     avanzar_varios_dias(FechaPrestamo, DiasSolicitados, FechaVencimiento).
 
-%calcular dias de retraso%
-
-
-calcularDiasRetraso(FechaVen, FechaActual, DR) :-
+% RF16 calcular dias de retraso
+calcularDiasRetraso(FechaVenc, FechaActual, DR) :-
     transformar_fecha(FechaVenc, FechaVencTrans),
     transformar_fecha(FechaActual, FechaActualTrans),
     dias_entre(FechaVencTrans, FechaActualTrans, Diff),
     ( Diff > 0 -> DR = Diff ; DR = 0 ).
 
-%calcular multa%
-
-
-calcularMulta(PrestamoIn, FechaActual, Tasa, Multa) :-
-    obtenerFechaVencimiento(PrestamoIn, FechaVenc),       
-    transformar_fecha(FechaActual, FechaActualTrans),      
+% RF17 calcular multa
+calcularMulta(PrestamoIn, FechaActual, TasaMulta, Multa) :-
+    obtenerFechaVencimiento(PrestamoIn, FechaVenc),
+    transformar_fecha(FechaActual, FechaActualTrans),
     dias_entre(FechaVenc, FechaActualTrans, Diff),
-    ( Diff > 0 ->
-        Multa is Diff * Tasa
+    number(Diff), number(TasaMulta),
+    ( Diff > 0 -> Multa is Diff * TasaMulta ; Multa is 0 ).
+
+% RF18 tomar prestamo
+tomarPrestamo(BibliotecaIn, IdUsuario, IdLibro, DiasSolicitados, BibliotecaOut) :-
+    obtenerUsuario(BibliotecaIn, IdUsuario, Usuario),
+    Usuario \= false,
+    \+ isUsuarioSuspendido(Usuario),
+    usuarioLibros(Usuario, LibrosU),
+    bibMaxLibros(BibliotecaIn, MaxL),
+    length(LibrosU, CantL),
+    CantL < MaxL,
+    isLibroDisponible(BibliotecaIn, IdLibro),
+    bibDiasMax(BibliotecaIn, DMax),
+    DiasSolicitados =< DMax,
+    bibLibros(BibliotecaIn, Libros),
+    buscarLibroPorId(Libros, IdLibro, LibroCompleto),
+    LibroCompleto \= false,
+    setLibroDisponible(LibroCompleto, no, LibroNoDisp),
+    reemplazarLibroEnLista(Libros, IdLibro, LibroNoDisp, Libros2),
+    setBibLibros(BibliotecaIn, Libros2, B1),
+    bibPrestamos(B1, PrestamosActuales),
+    length(PrestamosActuales, N),
+    IdPrestamo is N + 1,
+    getFecha(B1, FechaAct),
+    crearPrestamo(IdPrestamo, IdUsuario, IdLibro, FechaAct, DiasSolicitados, PrestamoNuevo),
+    append(PrestamosActuales, [PrestamoNuevo], Prestamos2),
+    setBibPrestamos(B1, Prestamos2, B2),
+    append(LibrosU, [IdLibro], NuevosLibrosU),
+    setUsuarioLibros(Usuario, NuevosLibrosU, UsuarioNuevo),
+    bibUsuarios(B2, Usuarios),
+    reemplazarUsuarioEnLista(Usuarios, IdUsuario, UsuarioNuevo, Usuarios2),
+    setBibUsuarios(B2, Usuarios2, BibliotecaOut).
+%RF18 regla 2: fallo devuleve la misma biblioteca
+tomarPrestamo(Biblioteca, _, _, _, Biblioteca).
+
+% RF19 devolverLibro
+devolverLibro(BibliotecaIn, IdUsuario, IdLibro, FechaActual, BibliotecaOut) :-
+    transformar_fecha(FechaActual, FechaActualTrans),
+    obtenerUsuario(BibliotecaIn, IdUsuario, Usuario),
+    Usuario \= false,
+    usuarioLibros(Usuario, LibrosPrestados),
+    member(IdLibro, LibrosPrestados),
+    bibPrestamos(BibliotecaIn, Prestamos),
+    encontrarPrestamoActivo(Prestamos, IdUsuario, IdLibro, Prestamo),
+    bibTasaMulta(BibliotecaIn, TasaMulta),
+    calcularMulta(Prestamo, FechaActualTrans, TasaMulta, Multa),
+    usuarioDeuda(Usuario, DeudaActual),
+    NuevaDeuda is DeudaActual + Multa,
+    setUsuarioDeuda(Usuario, NuevaDeuda, UsuarioConDeuda),
+    bibLimiteDeuda(BibliotecaIn, LimiteDeuda),
+    ( NuevaDeuda >= LimiteDeuda ->
+        setUsuarioEstado(UsuarioConDeuda, suspendido, UsuarioTemp1)
     ;
-        Multa is 0
+        UsuarioTemp1 = UsuarioConDeuda
+    ),
+    quitarLibroDeLista(LibrosPrestados, IdLibro, NuevosLibrosUsuario),
+    setUsuarioLibros(UsuarioTemp1, NuevosLibrosUsuario, UsuarioFinal),
+    bibLibros(BibliotecaIn, Libros),
+    buscarLibroPorId(Libros, IdLibro, Libro),
+    Libro \= false,
+    setLibroDisponible(Libro, si, LibroActualizado),
+    reemplazarLibroEnLista(Libros, IdLibro, LibroActualizado, NuevosLibros),
+    bibUsuarios(BibliotecaIn, Usuarios),
+    reemplazarUsuarioEnLista(Usuarios, IdUsuario, UsuarioFinal, NuevosUsuarios),
+    removerPrestamo(Prestamos, Prestamo, NuevosPrestamos),
+    setBibLibros(BibliotecaIn, NuevosLibros, Temp1),
+    setBibUsuarios(Temp1, NuevosUsuarios, Temp2),
+    setBibPrestamos(Temp2, NuevosPrestamos, BibliotecaOut).
+
+% funciones auxiliares
+% removerPrestamo
+removerPrestamo([], _, []).
+removerPrestamo([P|Resto], P, Resto) :- !.
+removerPrestamo([X|Resto], P, [X|Resto2]) :-
+    removerPrestamo(Resto, P, Resto2).
+
+% encontrarPrestamoActivo
+encontrarPrestamoActivo([Prestamo|_], IdUsuario, IdLibro, Prestamo) :-
+    prestamoUsuario(Prestamo, IdUsuario),
+    prestamoLibro(Prestamo, IdLibro), !.
+encontrarPrestamoActivo([_|Resto], IdUsuario, IdLibro, Prestamo) :-
+    encontrarPrestamoActivo(Resto, IdUsuario, IdLibro, Prestamo).
+
+% quitarLibroDeLista
+quitarLibroDeLista([IdLibro|Resto], IdLibro, Resto) :- !.
+quitarLibroDeLista([Libro|Resto], IdLibro, [Libro|NuevoResto]) :-
+    quitarLibroDeLista(Resto, IdLibro, NuevoResto).
+
+% actualizarDisponibilidadLibro (usa reemplazarLibroEnLista)
+actualizarDisponibilidadLibro(BibliotecaIn, IdLibro, NuevoEstado, BibliotecaOut) :-
+    bibLibros(BibliotecaIn, Libros),
+    buscarLibroPorId(Libros, IdLibro, Libro),
+    Libro \= false,
+    setLibroDisponible(Libro, NuevoEstado, LibroActualizado),
+    reemplazarLibroEnLista(Libros, IdLibro, LibroActualizado, NuevosLibros),
+    setBibLibros(BibliotecaIn, NuevosLibros, BibliotecaOut).
+
+% actualizarUsuarioEnBiblioteca (usa reemplazarUsuarioEnLista)
+actualizarUsuarioEnBiblioteca(BibliotecaIn, IdUsuario, UsuarioActualizado, BibliotecaOut) :-
+    bibUsuarios(BibliotecaIn, Usuarios),
+    reemplazarUsuarioEnLista(Usuarios, IdUsuario, UsuarioActualizado, NuevosUsuarios),
+    setBibUsuarios(BibliotecaIn, NuevosUsuarios, BibliotecaOut).
+
+% procesarPrestamoCompletado (usa removerPrestamo)
+procesarPrestamoCompletado(BibliotecaIn, Prestamo, BibliotecaOut) :-
+    bibPrestamos(BibliotecaIn, Prestamos),
+    removerPrestamo(Prestamos, Prestamo, NuevosPrestamos),
+    setBibPrestamos(BibliotecaIn, NuevosPrestamos, BibliotecaOut).
+
+% quitarPrestamoDeLista (compatible, delega en removerPrestamo)
+quitarPrestamoDeLista(Prestamos, Prestamo, NuevosPrestamos) :-
+    removerPrestamo(Prestamos, Prestamo, NuevosPrestamos).
+
+% reemplazarLibroEnLista por Id
+reemplazarLibroEnLista([Libro|Resto], Id, NuevoLibro, [NuevoLibro|Resto]) :-
+    libroId(Libro, Id), !.
+reemplazarLibroEnLista([Libro|Resto], Id, NuevoLibro, [Libro|NuevoResto]) :-
+    reemplazarLibroEnLista(Resto, Id, NuevoLibro, NuevoResto).
+reemplazarLibroEnLista([], _, _, []).
+
+% reemplazarUsuarioEnLista por Id
+reemplazarUsuarioEnLista([Usuario|Resto], Id, NuevoUsuario, [NuevoUsuario|Resto]) :-
+    usuarioId(Usuario, Id), !.
+reemplazarUsuarioEnLista([Usuario|Resto], Id, NuevoUsuario, [Usuario|NuevoResto]) :-
+    reemplazarUsuarioEnLista(Resto, Id, NuevoUsuario, NuevoResto).
+reemplazarUsuarioEnLista([], _, _, []).
+
+% RF20: debeSuspenderse
+debeSuspenderse(Bib, IdUsuario, FechaActualStr) :-
+    obtenerUsuario(Bib, IdUsuario, Usuario),
+    Usuario \= false,
+    usuarioDeuda(Usuario, Deuda),
+    bibLimiteDeuda(Bib, LimiteDeuda),
+    ( Deuda >= LimiteDeuda
+    ;
+        usuarioLibros(Usuario, Libros),
+        Libros \= [],
+        bibDiasMax(Bib, MaxDias),
+        transformar_fecha(FechaActualStr, FAct),
+        tieneRetraso(Bib, IdUsuario, Libros, FAct, MaxDias)
     ).
 
+tieneRetraso(_, _, [], _, _) :- fail.
+tieneRetraso(Bib, IdUsuario, [IdLibro|Resto], FechaActual, MaxDias) :-
+    bibPrestamos(Bib, Prestamos),
+    encontrarPrestamoActivo(Prestamos, IdUsuario, IdLibro, Prestamo),
+    prestamoFecha(Prestamo, FechaPrestamo),
+    transformar_fecha(FechaPrestamo, FPrestamo),
+    dias_entre(FPrestamo, FechaActual, Diff),
+    ( Diff > MaxDias
+    ;
+      tieneRetraso(Bib, IdUsuario, Resto, FechaActual, MaxDias)
+    ).
+
+% RF21 suspenderUsuario
+suspenderUsuario(BibliotecaIn, IdUsuario, BibliotecaOut) :-
+    obtenerUsuario(BibliotecaIn, IdUsuario, Usuario),
+    Usuario \= false,
+    usuarioEstado(Usuario, Estado),
+    ( Estado = suspendido ->
+        BibliotecaOut = BibliotecaIn
+    ;
+        setUsuarioEstado(Usuario, suspendido, UsuarioMod),
+        bibUsuarios(BibliotecaIn, Usuarios),
+        reemplazarUsuarioEnLista(Usuarios, IdUsuario, UsuarioMod, Usuarios2),
+        setBibUsuarios(BibliotecaIn, Usuarios2, BibliotecaOut)
+    ).
